@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/lcd/code/catkin_ws/build/Astar",
+  "command": "/usr/bin/c++   -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"Astar\\\" -I/home/lcd/code/catkin_ws/src/Astar/include -I/opt/ros/kinetic/include -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -std=gnu++14 -o CMakeFiles/Astar.dir/src/main.cpp.o -c /home/lcd/code/catkin_ws/src/Astar/src/main.cpp",
+  "file": "/home/lcd/code/catkin_ws/src/Astar/src/main.cpp"
+},
+{
+  "directory": "/home/lcd/code/catkin_ws/build/Astar",
+  "command": "/usr/bin/c++   -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"Astar\\\" -I/home/lcd/code/catkin_ws/src/Astar/include -I/opt/ros/kinetic/include -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -std=gnu++14 -o CMakeFiles/Astar.dir/src/Build_Map.cpp.o -c /home/lcd/code/catkin_ws/src/Astar/src/Build_Map.cpp",
+  "file": "/home/lcd/code/catkin_ws/src/Astar/src/Build_Map.cpp"
+},
+{
+  "directory": "/home/lcd/code/catkin_ws/build/Astar",
+  "command": "/usr/bin/c++   -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"Astar\\\" -I/home/lcd/code/catkin_ws/src/Astar/include -I/opt/ros/kinetic/include -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -std=gnu++14 -o CMakeFiles/Astar.dir/src/Planner.cpp.o -c /home/lcd/code/catkin_ws/src/Astar/src/Planner.cpp",
+  "file": "/home/lcd/code/catkin_ws/src/Astar/src/Planner.cpp"
+}
+]
