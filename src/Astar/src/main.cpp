@@ -28,13 +28,14 @@ int main(int argc, char** argv) {
   /** 初始化地图
    * {xmin,ymin,zmin,xmax,ymax,zmax} 
    */
-  std::vector<double> Boundary = { 0.0, -5.0, 0.0, 10.0, 20.0, 10.0 };
+  std::vector<double> Boundary = { 0.0, 0.0, 0.0, 20.0, 20.0, 20.0 };
   // 初始化障碍物
   std::vector<std::vector<double>> Obstacle = {
       { 0.0, 2.0, 0.0, 2.0, 5, 3 },
        { 4, 2.0, 4.5, 5.0, 5.5, 6.0 }, 
        { 4, 4.0, 1.5, 5.0, 7, 3.5 }, 
-       { 0.0, 2.0, 4, 3.0, 5.5, 6.5 } };
+       { 0.0, 2.0, 4, 3.0, 5.5, 6.5 },
+       { 1.5, 0.5, 7, 3.0, 5.5, 8 } };
 
   // 建立map
   Build_Map Map = Build_Map(Boundary, xy_res, z_res, margin);
@@ -42,12 +43,16 @@ int main(int argc, char** argv) {
   //得到world
   std::vector<int> World = Map.World_Dimensions();
 
+  // 构建障碍物膨胀层
+  std::vector<std::vector<std::vector<int>>> inflationlayer = Map.Build_costmap(Obstacle);
+
   //实例化 planner类
   Planner Plan = Planner({ World[0], World[1], World[2] });
 
   //将障碍物添加到 closed列表
   for (const std::vector<double> &v : Obstacle) {
     std::vector<int> Obstacle_Extrema = Map.Build_Obstacle(v);
+    //std::vector<std::vector<int>> inflationlayer = Map.Build_costmap(v);
     for (int Counter_X = Obstacle_Extrema[0]; Counter_X != Obstacle_Extrema[3];
         Counter_X++) {
       for (int Counter_Y = Obstacle_Extrema[1];
@@ -60,11 +65,15 @@ int main(int argc, char** argv) {
     }
   }
 
+
+
+
+
   // 计算距离设置为欧吉里的 或者 曼哈顿
   Plan.Set_Heuristic(Planner::Manhattan);
   std::cout << "Calculating Shortest Path ... \n";
-  std::vector<double> Start = { 0, 0.5, 8 };  //起点
-  std::vector<double> Goal = { 6, 6.4, 0 };  //终点
+  std::vector<double> Start = { 0, 1.5, 5 };  //起点
+  std::vector<double> Goal = { 5.0, 7, 0 };  //终点
 
   // 检查起点 终点 是否合法
   if ((Start[0] < Boundary[0] || Start[0] > Boundary[3])
@@ -82,7 +91,7 @@ int main(int argc, char** argv) {
 
     //auto path = Plan.findPath({ Start_Node[0], Start_Node[1], Start_Node[2] },
     //                         { Goal_Node[0], Goal_Node[1], Goal_Node[2] });
-    path = Plan.findPath({ Start_Node[0], Start_Node[1], Start_Node[2] },
+    path = Plan.findPath(inflationlayer, { Start_Node[0], Start_Node[1], Start_Node[2] },
                               { Goal_Node[0], Goal_Node[1], Goal_Node[2] });
 
     // 打印路径

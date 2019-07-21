@@ -54,9 +54,48 @@ std::vector<int> Build_Map::Build_Obstacle(std::vector<double> v) {
   int maxz = std::min(
       static_cast<int>(std::ceil(((v[5] - Boundary[2] + margin) / z_res))),
       World[2]);
+
   std::vector<int> Obstacle_Extrema = { minx, miny, minz, maxx, maxy, maxz };
   return Obstacle_Extrema;
 }
+
+/**
+ * 构建障碍物的膨胀层
+ */
+std::vector<std::vector<std::vector<int>>> Build_Map::Build_costmap(std::vector<std::vector<double>> Obstacle){
+  std::vector<std::vector<int>> inflationlayer1;
+  std::vector<std::vector<int>> inflationlayer2;
+  for (const std::vector<double> &v : Obstacle){
+    int minx = std::max(
+        static_cast<int>(std::floor(((v[0] - Boundary[0] - margin) / xy_res))),
+        0);
+    int miny = std::max(
+        static_cast<int>(std::floor(((v[1] - Boundary[1] - margin) / xy_res))),
+        0);
+    int minz = std::max(
+        static_cast<int>(std::floor(((v[2] - Boundary[2] - margin) / z_res))), 0);
+    int maxx = std::min(
+        static_cast<int>(std::ceil(((v[3] - Boundary[0] + margin) / xy_res))),
+        World[0]);
+    int maxy = std::min(
+        static_cast<int>(std::ceil(((v[4] - Boundary[1] + margin) / xy_res))),
+        World[1]);
+    int maxz = std::min(
+        static_cast<int>(std::ceil(((v[5] - Boundary[2] + margin) / z_res))),
+        World[2]);
+    //std::vector<int> inflationlayer1 = {minx-1, miny-1, minz-1, maxx+1, maxy+1, maxz+1}; //膨胀层 cost = 250
+    //std::vector<int> inflationlayer2 = {minx-2, miny-2, minz-2, maxx+2, maxy+2, maxz+2}; //膨胀层 cost = 128
+    inflationlayer1.push_back({minx-1, miny-1, minz-1, maxx+1, maxy+1, maxz+1});
+    inflationlayer2.push_back({minx-2, miny-2, minz-2, maxx+2, maxy+2, maxz+2});
+  }
+
+
+  
+  return {inflationlayer1, inflationlayer2};
+}
+
+
+
 
 /**
  * 构建节点

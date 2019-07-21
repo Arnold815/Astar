@@ -1,0 +1,8 @@
+prefix=/home/lcd/code/catkin_ws/install
+
+Name: quadrotor_local_planner
+Description: Description of quadrotor_local_planner
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/lcd/code/catkin_ws/install/lib 
+Requires: 

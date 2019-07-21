@@ -17,7 +17,7 @@ struct Vec3i {
 
 struct Node {
 
-  double G, H;
+  double G, H, cost;
   Vec3i coordinates;
   Node *Parent;
   explicit Node(Vec3i, Node *Parent_ = nullptr);
@@ -39,12 +39,14 @@ class Planner {
   static double Manhattan(Vec3i, Vec3i);  
   
   void Set_Heuristic(std::function<double(Vec3i, Vec3i)>);
-  std::vector<Vec3i> findPath(Vec3i, Vec3i);
+  std::vector<Vec3i> findPath(std::vector<std::vector<std::vector<int>>> inflationlayer, Vec3i, Vec3i);
   void Add_Collision(Vec3i);
   std::function<double(Vec3i, Vec3i)> heuristic;
   std::vector<Vec3i> direction, walls;
   Vec3i World_Size;
   virtual ~Planner();  
+
+  double costmap(Vec3i coordinates_, std::vector<std::vector<std::vector<int>>> inflationlayer_);
 };
 
 #endif  

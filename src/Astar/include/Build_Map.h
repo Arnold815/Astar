@@ -9,6 +9,8 @@
 #include "Planner.h"
 
 
+
+
 class Build_Map {
  public:  
 
@@ -21,6 +23,8 @@ class Build_Map {
   std::vector<int> Build_Obstacle(std::vector<double>);
   std::vector<int> Build_Node(std::vector<double>);
   std::vector<double> Get_Coordinate(std::vector<int>);
+
+  std::vector<std::vector<std::vector<int>>> Build_costmap(std::vector<std::vector<double>> v);//构建膨胀层
   virtual ~Build_Map(); 
 };
 

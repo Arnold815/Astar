@@ -22,7 +22,7 @@ Node::Node(Vec3i coordinates_, Node *Parent_)
  * 计算 F = G + H
  */
 double Node::Get_Score() {
-  return G + H;
+  return G + H + cost;
 }
 
 
@@ -52,7 +52,7 @@ Planner::Planner(Vec3i World_Size_) {
     { 1, -1, 0}, {-1, 1, 0}, {1, 1, -1}, {1, -1, 1},
     { -1, 1, 1}, {1, -1, -1}, {-1, -1, 1}, {-1, 1, -1},
     { 1, 1, 1}, {-1, -1, -1}
-  };
+  }; //26
   World_Size = World_Size_;
 }
 
@@ -74,7 +74,7 @@ void Planner::Add_Collision(Vec3i coordinates_) {
 /**
  * 寻找路径
  */
-std::vector<Vec3i> Planner::findPath(Vec3i Start_, Vec3i Goal_) {
+std::vector<Vec3i> Planner::findPath(std::vector<std::vector<std::vector<int>>> inflationlayer, Vec3i Start_, Vec3i Goal_) {
   Node *current = nullptr;  // 设置当前节点为空
   std::set<Node*> Open_Set, Closed_Set;  // 初始化 open 和 closed 列表
   Open_Set.insert(new Node(Start_));  // 将开始位置节点 插入到open列表
@@ -99,19 +99,24 @@ std::vector<Vec3i> Planner::findPath(Vec3i Start_, Vec3i Goal_) {
     //从所有可能的方向，检查临近点
     for (double i = 0; i < 26; ++i) {
       Vec3i newCoordinates(current->coordinates + direction[i]);
-      // 判断是否为障碍
+      // 判断是否为障碍或者关闭列表内，如果是则跳过
       if (Detect_Collision(newCoordinates)
           || Find_Node(Closed_Set, newCoordinates)) {
         continue;
       }
-      // 计算临近点的F值
+      
+      
+
+      // 计算临近点的G值
       double Total_Cost = current->G
           + ((i < 6) ? 100 : ((i > 5 && i < 18) ? 141 : 173));
+      
       Node *successor = Find_Node(Open_Set, newCoordinates);
       if (successor == nullptr) {
         successor = new Node(newCoordinates, current);
         successor->G = Total_Cost;
         successor->H = heuristic(successor->coordinates, Goal_);
+        successor->cost = costmap(newCoordinates, inflationlayer);
         Open_Set.insert(successor);
       } else if (Total_Cost < successor->G) { //如果相邻点在open中，只取G相对较低的
         
@@ -157,6 +162,25 @@ bool Planner::Detect_Collision(Vec3i coordinates_) {
     return true;  
   }
   return false; 
+}
+
+
+double Planner::costmap(Vec3i coordinates_, std::vector<std::vector<std::vector<int>>> inflationlayer_)
+{
+  int cost[2]={0,0};
+  int i = 0;
+  for(std::vector<std::vector<int>> &inflationlayer1 : inflationlayer_)
+  {
+    
+    for(std::vector<int> &inflationlayer : inflationlayer1)
+      if (coordinates_.x >= inflationlayer[0] && coordinates_.x <= inflationlayer[3] && coordinates_.y >= inflationlayer[1]
+          && coordinates_.y <= inflationlayer[4] && coordinates_.z >= inflationlayer[2] && coordinates_.z <= inflationlayer[5]) {
+            return cost[i]; //一层膨胀
+      }
+    i++;
+  }
+  return 0;
+  
 }
 
 /**
